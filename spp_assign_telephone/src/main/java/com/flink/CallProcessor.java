@@ -30,9 +30,10 @@ public class CallProcessor {
 	
 	public void callCount()  throws Exception{
 		String call_topic = "call_topic";
+		String call_output_topic= "call_output_topic";
 		StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-		Producer<String> p = new Producer<String>(BOOTSTRAP_SERVER, StringSerializer.class.getName());
-		Producer<String> targetProducer = new Producer<String>(BOOTSTRAP_SERVER, StringSerializer.class.getName());
+		Producer<String> care_topic = new Producer<String>(BOOTSTRAP_SERVER, StringSerializer.class.getName(), call_topic);
+		Producer<String> targetProducer = new Producer<String>(BOOTSTRAP_SERVER, StringSerializer.class.getName(),call_output_topic);
 		Properties props = new Properties();
 		props.put("bootstrap.servers", BOOTSTRAP_SERVER);
 		props.put("client.id", "flink-example1");
@@ -70,7 +71,7 @@ public class CallProcessor {
 		// .timeWindow(Time.seconds(5))
 
 		// produce a number as string every second
-		new CallGenerator(p, call_topic).start();
+		new CallGenerator(care_topic, call_topic).start();
 
 		// for visual topology of the pipeline. Paste the below output in
 		// https://flink.apache.org/visualizer/
